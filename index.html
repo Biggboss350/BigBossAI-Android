@@ -104,7 +104,7 @@ $('export').onclick=()=>{let h=getHist(),rows=[['date','asset','timeframe','sour
   "https://bigbossai-backend.rahima783384.workers.dev/";
 
 async function askBigBossAI(message, mode = "general") {
-  const response = await fetch(BIGBOSS_AI_API_ENDPOINT, {
+  const response = await fetch(window.BIGBOSS_AI_API_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
