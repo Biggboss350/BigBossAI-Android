@@ -148,5 +148,53 @@ $('aiAnalyse').onclick=async()=>{
   finally{btn.disabled=false;btn.textContent='ANALYSE SCREENSHOT WITH AI'}
 };
 
-</script></body></html> <control+s
+</script></
+<!-- BigBossAI Chat Section -->
+<div id="bigboss-chat" style="max-width:700px;margin:20px auto;padding:20px;background:#111;color:white;border:1px solid #c9a227;border-radius:14px;font-family:Arial;">
+  <h2 style="color:#e5bd45;">🤖 BigBossAI Chat</h2>
+  <p>Ask anything or choose Trading AI.</p>
+
+  <select id="bigboss-mode" style="width:100%;padding:12px;margin-bottom:10px;">
+    <option value="general">General AI</option>
+    <option value="trading">Trading AI</option>
+  </select>
+
+  <textarea id="bigboss-message" placeholder="Write your question here..." style="width:100%;min-height:100px;padding:12px;box-sizing:border-box;"></textarea>
+
+  <button id="bigboss-send" style="margin-top:10px;padding:12px 22px;background:#d4af37;color:#111;border:0;border-radius:8px;font-weight:bold;">
+    Send Message
+  </button>
+
+  <div id="bigboss-status" style="margin-top:15px;color:#e5bd45;"></div>
+  <div id="bigboss-reply" style="margin-top:12px;white-space:pre-wrap;line-height:1.6;"></div>
+</div>
+
+<script>
+document.getElementById("bigboss-send").addEventListener("click", async function () {
+  const message = document.getElementById("bigboss-message").value.trim();
+  const mode = document.getElementById("bigboss-mode").value;
+  const status = document.getElementById("bigboss-status");
+  const reply = document.getElementById("bigboss-reply");
+
+  if (!message) {
+    status.textContent = "Please enter your question.";
+    return;
+  }
+
+  this.disabled = true;
+  status.textContent = "BigBossAI is thinking...";
+  reply.textContent = "";
+
+  try {
+    const answer = await askBigBossAI(message, mode);
+    reply.textContent = answer;
+    status.textContent = "Response received.";
+  } catch (error) {
+    status.textContent = "Error: " + error.message;
+  } finally {
+    this.disabled = false;
+  }
+});
+</script>
+  ></html> 
                           
