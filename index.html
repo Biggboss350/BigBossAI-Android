@@ -100,7 +100,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 $('save').onclick=()=>{if(!current){alert('Run an analysis first.');return}let h=getHist();h.push({...current,notes:$('notes').value});localStorage.setItem('bbai-history',JSON.stringify(h));$('notes').value='';render();alert('Saved on this device.')};
 $('clear').onclick=()=>{if(confirm('Delete all locally saved journal entries?')){localStorage.removeItem('bbai-history');render()}};
 $('export').onclick=()=>{let h=getHist(),rows=[['date','asset','timeframe','source','result','rsi','ema','macd','notes'],...h.map(v=>[v.created,v.asset,v.tf,v.source,v.label,v.rsi,v.ema,v.macd,v.notes||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='big-boss-ai-journal.csv';a.click();URL.revokeObjectURL(a.href)};
-// Service workers are not needed in the bundled Android app.const BIGBOSS_AI_API_ENDPOINT =
+// Service workers are not needed in the bundled Android app.window.BIGBOSS_AI_API_ENDPOINT =
   "https://bigbossai-backend.rahima783384.workers.dev/";
 
 async function askBigBossAI(message, mode = "general") {
