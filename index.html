@@ -101,6 +101,27 @@ $('save').onclick=()=>{if(!current){alert('Run an analysis first.');return}let h
 $('clear').onclick=()=>{if(confirm('Delete all locally saved journal entries?')){localStorage.removeItem('bbai-history');render()}};
 $('export').onclick=()=>{let h=getHist(),rows=[['date','asset','timeframe','source','result','rsi','ema','macd','notes'],...h.map(v=>[v.created,v.asset,v.tf,v.source,v.label,v.rsi,v.ema,v.macd,v.notes||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='big-boss-ai-journal.csv';a.click();URL.revokeObjectURL(a.href)};
 // Service workers are not needed in the bundled Android app.window.BIGBOSS_AI_API_ENDPOINT =
+window.askBigBossAI = async function(message, mode = "general") {
+  const response = await fetch(window.BIGBOSS_AI_API_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: message,
+      mode: mode
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "AI connection failed");
+  }
+
+  return data.reply;
+};
+  
   "https://bigbossai-backend.rahima783384.workers.dev/";
 
 async function askBigBossAI(message, mode = "general") {
@@ -186,7 +207,7 @@ document.getElementById("bigboss-send").addEventListener("click", async function
   reply.textContent = "";
 
   try {
-    const answer = await askBigBossAI(message, mode);
+    const answer = await window.askBigBossAI(message, mode);
     reply.textContent = answer;
     status.textContent = "Response received.";
   } catch (error) {
