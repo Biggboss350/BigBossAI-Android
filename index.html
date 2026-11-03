@@ -1,110 +1,819 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090909"><meta name="description" content="Big Boss AI — educational trading chart analysis dashboard">
-<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<meta name="description" content="Big Boss AI — educational trading chart analysis dashboard">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
 <title>Big Boss AI</title>
+
 <style>
-:root{color-scheme:dark;--bg:#090909;--panel:#141414;--panel2:#1b1a17;--line:#393125;--gold:#d7ad55;--gold2:#f1d28b;--muted:#aaa39a;--white:#f7f2e8;--green:#55c99b;--red:#f07b78}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#302515 0,#090909 55%);color:var(--white);font:15px system-ui,-apple-system,Segoe UI,Arial}
-header{padding:20px 16px 15px;border-bottom:1px solid var(--line);background:#090909eF;position:sticky;top:0;z-index:4;backdrop-filter:blur(12px)}
-.head{max-width:920px;margin:auto;display:flex;align-items:center;gap:12px}.crown{width:44px;height:44px;border:1px solid #80622e;border-radius:13px;display:grid;place-items:center;color:var(--gold2);font-size:24px;background:linear-gradient(145deg,#292015,#100e0b)}
-h1{font-size:21px;letter-spacing:1.8px;margin:0;color:var(--gold2)}.sub{font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-top:3px}
-main{max-width:920px;margin:auto;padding:16px 14px 32px}.tabs{display:flex;gap:8px;overflow:auto;margin:0 0 14px}.tab{white-space:nowrap;background:#141414;color:var(--muted);border:1px solid var(--line);padding:9px 13px;border-radius:999px;width:auto;margin:0;font-size:13px}.tab.active{background:#302514;color:var(--gold2);border-color:#98753b}
-.card{background:linear-gradient(145deg,#191919,#111);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:13px;box-shadow:0 8px 28px #0005}
-h2{font-size:15px;letter-spacing:.5px;margin:0 0 13px;color:var(--gold2)}h3{font-size:13px;margin:0 0 7px;color:var(--white)}
-label{display:block;color:var(--muted);font-size:12px;margin:10px 0 5px}
-input,select,textarea{width:100%;background:#0b0b0b;color:var(--white);border:1px solid #40382b;border-radius:10px;padding:12px;font:inherit;min-width:0}
-textarea{min-height:105px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-button{width:100%;border:1px solid #a7823d;background:linear-gradient(135deg,#f0d18b,#b98735);color:#17110a;font-weight:800;border-radius:11px;padding:12px;font-size:14px;margin-top:12px}
-button.secondary{background:#171512;color:var(--gold2);border-color:#59482b}button.danger{background:#261514;color:#f4aaa4;border-color:#633633}
-.muted{color:var(--muted);font-size:12px;line-height:1.55}.tiny{font-size:10px;color:#8f887e}.metric{background:#0b0b0b;border:1px solid #302a20;padding:12px;border-radius:12px;min-width:0}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{display:block;font-size:18px;margin-top:5px;overflow-wrap:anywhere}
-.pill{display:inline-block;border:1px solid #6b542e;border-radius:999px;padding:5px 9px;font-size:10px;color:var(--gold2);letter-spacing:.7px}
-.signal{font-size:27px;font-weight:900;letter-spacing:1px;margin:9px 0 3px}.bull{color:var(--green)}.bear{color:var(--red)}.neutral{color:var(--gold2)}
-canvas{width:100%;height:190px;background:#0b0b0b;border:1px solid #302a20;border-radius:12px;display:block}
-.hidden{display:none!important}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row button{width:auto;min-width:100px}.historyItem{padding:11px 0;border-bottom:1px solid #302a20}.historyItem:last-child{border:0}
-#preview{max-width:100%;max-height:260px;display:none;border-radius:10px;margin-top:10px}
-footer{text-align:center;color:#777064;font-size:11px;padding:12px 10px 28px}
-@media(min-width:680px){main{padding-top:22px}.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}.two .card{height:100%}}
-</style></head>
-<body>
-<header><div class="head"><div class="crown">♛</div><div><h1>BIG BOSS AI</h1><div class="sub">TRADING ANALYSIS • EDUCATIONAL TOOL</div></div></div></header>
-<main>
-<nav class="tabs"><button class="tab active" data-tab="analyzer">Analyzer</button><button class="tab" data-tab="journal">Journal</button><button class="tab" data-tab="guide">Guide & Setup</button></nav>
-<section id="analyzer">
-<div class="two">
-<div class="card">
-<h2>01 / MARKET SETUP</h2><div class="grid">
-<div><label>Instrument</label><select id="asset"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>BTC/USD</option><option>OTHER / OTC</option></select></div>
-<div><label>Chart timeframe</label><select id="tf"><option>1 minute</option><option>5 minutes</option><option>15 minutes</option><option>1 hour</option></select></div>
-</div>
-<label>Data source</label><select id="source"><option value="manual">My pasted candle closes</option><option value="sample">Built-in sample data (demo only)</option></select>
-<label>Paste closing prices (oldest to newest, comma-separated)</label><textarea id="prices" placeholder="Example: 1.0810, 1.0814, 1.0812, 1.0818 ..."></textarea>
-<p class="muted">For calculations, provide at least 27 closing prices. Use data from the exact instrument and timeframe you are analysing. Do not mix OTC and regular market data.</p>
-<button id="analyse">RUN TECHNICAL ANALYSIS</button>
-</div>
-<div class="card">
-<h2>02 / CHART SCREENSHOT</h2>
-<label>Select chart image</label><input id="shot" type="file" accept="image/*">
-<img id="preview" alt="Selected chart screenshot preview">
-<label>Market type for AI analysis</label>
-<select id="marketType"><option value="normal">Normal market</option><option value="otc">Quotex OTC</option></select>
-<button id="aiAnalyse" class="secondary">ANALYSE SCREENSHOT WITH AI</button>
-<p class="muted">AI analysis requires a configured secure backend. OTC screenshots are visually analysed only; an external feed is not assumed to match Quotex OTC prices.</p>
-<div id="aiResult" class="metric hidden" style="margin-top:12px" aria-live="polite">
-  <b id="aiDecision">AI ANALYSIS</b><p id="aiSummary" class="muted"></p><p id="aiDetails" class="muted"></p>
-</div>
-<h2 style="margin-top:18px">03 / PRICE MOMENTUM</h2><canvas id="chart" width="700" height="250" aria-label="Closing price line chart"></canvas>
-</div></div>
-<div class="card">
-<h2>04 / ANALYSIS RESULT</h2><span class="pill" id="status">WAITING FOR DATA</span><div class="signal neutral" id="signal">NO ANALYSIS YET</div><p class="muted" id="reason">Choose sample data or paste your own closing prices, then run analysis.</p>
-<div class="grid3"><div class="metric"><span>RSI (14)</span><b id="rsi">—</b></div><div class="metric"><span>EMA (9 / 21)</span><b id="ema">—</b></div><div class="metric"><span>MACD (12/26)</span><b id="macd">—</b></div></div>
-<p class="muted" id="detail" style="margin-top:12px">No data calculated.</p>
-</div>
-</section>
-<section id="journal" class="hidden">
-<div class="card"><h2>ANALYSIS JOURNAL</h2><p class="muted">Save notes about an analysis. These records stay in this browser on this device; they are not synced to a server.</p><label>Notes</label><input id="notes" placeholder="e.g. Waited for candle close; trend was mixed">
-<button id="save" >SAVE CURRENT ANALYSIS</button><button class="secondary" id="export">EXPORT JOURNAL CSV</button><div id="history" style="margin-top:12px"></div><button class="danger" id="clear">CLEAR LOCAL JOURNAL</button></div>
-</section>
-<section id="guide" class="hidden">
-<div class="card"><h2>HOW TO USE BIG BOSS AI</h2><ol class="muted"><li>Select the exact instrument and chart timeframe.</li><li>Choose sample data to test the interface, or paste at least 27 candle closing prices from a source you trust.</li><li>Tap Run Technical Analysis. RSI, EMA and MACD are calculated locally.</li><li>Read the explanation. Mixed indicators produce NO CLEAR SETUP.</li><li>Save your observation in the journal and review results in demo practice.</li></ol></div>
-<div class="card"><h2>IMPORTANT LIMITATIONS</h2><p class="muted">This is a technical-indicator calculator, not a predictive AI model. It does not connect to Quotex, read Quotex account data, fetch live prices, or place trades. Screenshot upload is preview-only. Sample data is synthetic and must never be treated as a live signal.</p><p class="muted">Binary options are exceptionally high risk and may result in losing the entire stake. No indicator combination guarantees direction or profit. Do not rely on this app for financial decisions. Check local regulations and the platform's authorisation before use.</p></div>
-<div class="card"><h2>LIVE DATA / AI UPGRADE</h2><p class="muted">A future release can connect a licensed market-data API and a secure AI image-analysis backend. API keys must be kept on a server, never pasted into this app. Quotex OTC prices may differ from third-party market feeds; an external feed cannot be assumed to match.</p></div>
-</section>
-</main><footer>BIG BOSS AI · Version 1.0 · Educational prototype · No automated trading</footer>
-<script>
-const $=id=>document.getElementById(id);
-const sample=[1.0810,1.0814,1.0812,1.0818,1.0820,1.0817,1.0823,1.0825,1.0822,1.0828,1.0830,1.0827,1.0832,1.0835,1.0831,1.0837,1.0839,1.0836,1.0841,1.0844,1.0840,1.0846,1.0848,1.0845,1.0850,1.0852,1.0849,1.0854,1.0857,1.0853,1.0859,1.0861];
-let current=null, closes=[];
-function ema(a,p){let k=2/(p+1),v=a[0];for(let i=1;i<a.length;i++)v=a[i]*k+v*(1-k);return v}
-function rsi(a,p=14){let g=0,l=0;for(let i=a.length-p;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}if(l===0)return 100;let rs=(g/p)/(l/p);return 100-100/(1+rs)}
-function draw(a){let c=$('chart'),x=c.getContext('2d'),w=c.width,h=c.height;x.clearRect(0,0,w,h);x.strokeStyle='#302a20';for(let i=1;i<5;i++){x.beginPath();x.moveTo(0,i*h/5);x.lineTo(w,i*h/5);x.stroke()}if(!a.length)return;let mn=Math.min(...a),mx=Math.max(...a),range=mx-mn||1;x.strokeStyle='#d7ad55';x.lineWidth=3;x.beginPath();a.forEach((v,i)=>{let px=i*w/(a.length-1),py=h-20-(v-mn)/range*(h-40);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()}
-function analyse(){let raw=$('source').value==='sample'?sample:$('prices').value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);if(raw.length<27){alert('Please provide at least 27 valid closing prices, or select sample data.');return}
-closes=raw;let rv=rsi(raw),e9=ema(raw.slice(-Math.min(60,raw.length)),9),e21=ema(raw.slice(-Math.min(60,raw.length)),21),mac=ema(raw.slice(-Math.min(60,raw.length)),12)-ema(raw.slice(-Math.min(60,raw.length)),26);
-let bull=e9>e21&&mac>0&&rv>50&&rv<70,bear=e9<e21&&mac<0&&rv<50&&rv>30;
-let label=bull?'BULLISH CONDITIONS':bear?'BEARISH CONDITIONS':'NO CLEAR SETUP',cls=bull?'bull':bear?'bear':'neutral';
-$('signal').textContent=label;$('signal').className='signal '+cls;$('status').textContent=$('source').value==='sample'?'SAMPLE DATA · NOT LIVE':'USER-ENTERED DATA';
-$('reason').textContent=bull?'EMA 9 is above EMA 21, MACD is positive, and RSI is above 50 but below 70.':bear?'EMA 9 is below EMA 21, MACD is negative, and RSI is below 50 but above 30.':'The indicators do not align under this simple rule. No directional conclusion.';
-$('rsi').textContent=rv.toFixed(2);$('ema').textContent=e9>e21?'9 above 21':'9 below 21';$('macd').textContent=mac.toFixed(6);
-$('detail').textContent='RSI is a momentum measure; EMA values smooth past prices; MACD is the difference between 12- and 26-period EMAs. These are lagging indicators and can produce false readings. This is not a probability or confidence score.';
-draw(raw);current={asset:$('asset').value,tf:$('tf').value,source:$('source').value,label,rsi:rv,ema:e9>e21?'9 above 21':'9 below 21',macd:mac,created:new Date().toISOString()};
+:root{
+  color-scheme:dark;
+  --bg:#090909;
+  --panel:#141414;
+  --line:#393125;
+  --gold:#d7ad55;
+  --gold2:#f1d28b;
+  --muted:#aaa39a;
+  --white:#f7f2e8;
+  --green:#55c99b;
+  --red:#f07b78;
 }
-$('analyse').onclick=analyse;
-$('source').onchange=()=>{if($('source').value==='sample')$('prices').value=sample.join(', ');else $('prices').value=''};
-$('shot').onchange=e=>{let f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);$('preview').src=u;$('preview').style.display='block'};
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));['analyzer','journal','guide'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));if(b.dataset.tab==='journal')render()});
-function getHist(){try{return JSON.parse(localStorage.getItem('bbai-history')||'[]')}catch{return []}}
-function render(){let h=getHist();$('history').innerHTML=h.length?h.slice().reverse().map(v=>`<div class="historyItem"><b>${esc(v.label)}</b><div class="muted">${esc(v.asset)} · ${esc(v.tf)} · RSI ${Number(v.rsi).toFixed(1)} · ${new Date(v.created).toLocaleString()}</div><div class="muted">${esc(v.notes||'No notes')}</div></div>`).join(''):'<p class="muted">No saved analyses yet.</p>'}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-$('save').onclick=()=>{if(!current){alert('Run an analysis first.');return}let h=getHist();h.push({...current,notes:$('notes').value});localStorage.setItem('bbai-history',JSON.stringify(h));$('notes').value='';render();alert('Saved on this device.')};
-$('clear').onclick=()=>{if(confirm('Delete all locally saved journal entries?')){localStorage.removeItem('bbai-history');render()}};
-$('export').onclick=()=>{let h=getHist(),rows=[['date','asset','timeframe','source','result','rsi','ema','macd','notes'],...h.map(v=>[v.created,v.asset,v.tf,v.source,v.label,v.rsi,v.ema,v.macd,v.notes||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='big-boss-ai-journal.csv';a.click();URL.revokeObjectURL(a.href)};
-// Service workers are not needed in the bundled Android app.window.BIGBOSS_AI_API_ENDPOINT =
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(ellipse at 50% -20%,#302515 0,#090909 55%);
+  color:var(--white);
+  font:15px system-ui,-apple-system,Segoe UI,Arial;
+}
+header{
+  padding:20px 16px 15px;
+  border-bottom:1px solid var(--line);
+  background:#090909ef;
+  position:sticky;
+  top:0;
+  z-index:4;
+  backdrop-filter:blur(12px);
+}
+.head{
+  max-width:920px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.crown{
+  width:44px;
+  height:44px;
+  border:1px solid #80622e;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  color:var(--gold2);
+  font-size:24px;
+  background:linear-gradient(145deg,#292015,#100e0b);
+}
+h1{
+  font-size:21px;
+  letter-spacing:1.8px;
+  margin:0;
+  color:var(--gold2);
+}
+.sub{
+  font-size:11px;
+  letter-spacing:1.5px;
+  color:var(--muted);
+  margin-top:3px;
+}
+main{
+  max-width:920px;
+  margin:auto;
+  padding:16px 14px 32px;
+}
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin:0 0 14px;
+}
+.tab{
+  white-space:nowrap;
+  background:#141414;
+  color:var(--muted);
+  border:1px solid var(--line);
+  padding:9px 13px;
+  border-radius:999px;
+  width:auto;
+  margin:0;
+  font-size:13px;
+}
+.tab.active{
+  background:#302514;
+  color:var(--gold2);
+  border-color:#98753b;
+}
+.card{
+  background:linear-gradient(145deg,#191919,#111);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:16px;
+  margin-bottom:13px;
+  box-shadow:0 8px 28px #0005;
+}
+h2{
+  font-size:15px;
+  letter-spacing:.5px;
+  margin:0 0 13px;
+  color:var(--gold2);
+}
+h3{
+  font-size:13px;
+  margin:0 0 7px;
+  color:var(--white);
+}
+label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin:10px 0 5px;
+}
+input,select,textarea{
+  width:100%;
+  background:#0b0b0b;
+  color:var(--white);
+  border:1px solid #40382b;
+  border-radius:10px;
+  padding:12px;
+  font:inherit;
+  min-width:0;
+}
+textarea{
+  min-height:105px;
+  resize:vertical;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+button{
+  width:100%;
+  border:1px solid #a7823d;
+  background:linear-gradient(135deg,#f0d18b,#b98735);
+  color:#17110a;
+  font-weight:800;
+  border-radius:11px;
+  padding:12px;
+  font-size:14px;
+  margin-top:12px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+button.secondary{
+  background:#171512;
+  color:var(--gold2);
+  border-color:#59482b;
+}
+button.danger{
+  background:#261514;
+  color:#f4aaa4;
+  border-color:#633633;
+}
+.muted{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+.tiny{
+  font-size:10px;
+  color:#8f887e;
+}
+.metric{
+  background:#0b0b0b;
+  border:1px solid #302a20;
+  padding:12px;
+  border-radius:12px;
+  min-width:0;
+}
+.metric span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+.metric b{
+  display:block;
+  font-size:18px;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+.pill{
+  display:inline-block;
+  border:1px solid #6b542e;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:10px;
+  color:var(--gold2);
+  letter-spacing:.7px;
+}
+.signal{
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:1px;
+  margin:9px 0 3px;
+}
+.bull{color:var(--green)}
+.bear{color:var(--red)}
+.neutral{color:var(--gold2)}
+canvas{
+  width:100%;
+  height:190px;
+  background:#0b0b0b;
+  border:1px solid #302a20;
+  border-radius:12px;
+  display:block;
+}
+.hidden{display:none!important}
+.historyItem{
+  padding:11px 0;
+  border-bottom:1px solid #302a20;
+}
+.historyItem:last-child{border:0}
+#preview{
+  max-width:100%;
+  max-height:260px;
+  display:none;
+  border-radius:10px;
+  margin-top:10px;
+}
+#bigboss-chat{
+  max-width:920px;
+  margin:20px auto;
+  padding:16px;
+  background:#111;
+  color:white;
+  border:1px solid #80622e;
+  border-radius:14px;
+}
+#bigboss-chat h2{color:#e5bd45}
+#bigboss-reply{
+  white-space:pre-wrap;
+  line-height:1.6;
+  overflow-wrap:anywhere;
+}
+footer{
+  text-align:center;
+  color:#777064;
+  font-size:11px;
+  padding:12px 10px 28px;
+}
+@media(min-width:680px){
+  main{padding-top:22px}
+  .two{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="head">
+    <div class="crown">♛</div>
+    <div>
+      <h1>BIG BOSS AI</h1>
+      <div class="sub">TRADING ANALYSIS • EDUCATIONAL TOOL</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="analyzer">Analyzer</button>
+  <button class="tab" data-tab="journal">Journal</button>
+  <button class="tab" data-tab="guide">Guide & Setup</button>
+</nav>
+
+<section id="analyzer">
+
+<div class="two">
+
+<div class="card">
+  <h2>01 / MARKET SETUP</h2>
+
+  <div class="grid">
+    <div>
+      <label>Instrument</label>
+      <select id="asset">
+        <option>EUR/USD</option>
+        <option>GBP/USD</option>
+        <option>USD/JPY</option>
+        <option>AUD/USD</option>
+        <option>BTC/USD</option>
+        <option>OTHER / OTC</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Chart timeframe</label>
+      <select id="tf">
+        <option>1 minute</option>
+        <option>5 minutes</option>
+        <option>15 minutes</option>
+        <option>1 hour</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Data source</label>
+  <select id="source">
+    <option value="manual">My pasted candle closes</option>
+    <option value="sample">Built-in sample data (demo only)</option>
+  </select>
+
+  <label>Paste closing prices (oldest to newest)</label>
+  <textarea id="prices" placeholder="Example: 1.0810, 1.0814, 1.0812, 1.0818 ..."></textarea>
+
+  <p class="muted">
+    Provide at least 27 valid closing prices. Use the exact instrument and timeframe.
+  </p>
+
+  <button id="analyse">RUN TECHNICAL ANALYSIS</button>
+</div>
+
+<div class="card">
+  <h2>02 / CHART SCREENSHOT</h2>
+
+  <label>Select chart image</label>
+  <input id="shot" type="file" accept="image/png,image/jpeg,image/webp">
+
+  <img id="preview" alt="Selected chart screenshot preview">
+
+  <label>Market type</label>
+  <select id="marketType">
+    <option value="normal">Normal market</option>
+    <option value="otc">Quotex OTC</option>
+  </select>
+
+  <button id="aiAnalyse" class="secondary">ANALYSE SCREENSHOT WITH AI</button>
+
+  <p class="muted">
+    Screenshot preview is available. Image analysis requires additional backend image support.
+  </p>
+
+  <h2 style="margin-top:18px">03 / PRICE MOMENTUM</h2>
+  <canvas id="chart" width="700" height="250"></canvas>
+</div>
+
+</div>
+
+<div class="card">
+  <h2>04 / ANALYSIS RESULT</h2>
+
+  <span class="pill" id="status">WAITING FOR DATA</span>
+
+  <div class="signal neutral" id="signal">NO ANALYSIS YET</div>
+
+  <p class="muted" id="reason">
+    Choose sample data or paste your own closing prices, then run analysis.
+  </p>
+
+  <div class="grid3">
+    <div class="metric">
+      <span>RSI (14)</span>
+      <b id="rsi">—</b>
+    </div>
+    <div class="metric">
+      <span>EMA (9 / 21)</span>
+      <b id="ema">—</b>
+    </div>
+    <div class="metric">
+      <span>MACD (12/26)</span>
+      <b id="macd">—</b>
+    </div>
+  </div>
+
+  <p class="muted" id="detail" style="margin-top:12px">
+    No data calculated.
+  </p>
+</div>
+
+</section>
+
+<section id="journal" class="hidden">
+<div class="card">
+  <h2>ANALYSIS JOURNAL</h2>
+
+  <p class="muted">
+    Your saved records stay in this browser on this device.
+  </p>
+
+  <label>Notes</label>
+  <input id="notes" placeholder="Write your analysis notes">
+
+  <button id="save">SAVE CURRENT ANALYSIS</button>
+  <button class="secondary" id="export">EXPORT JOURNAL CSV</button>
+
+  <div id="history" style="margin-top:12px"></div>
+
+  <button class="danger" id="clear">CLEAR LOCAL JOURNAL</button>
+</div>
+</section>
+
+<section id="guide" class="hidden">
+
+<div class="card">
+  <h2>HOW TO USE BIG BOSS AI</h2>
+  <ol class="muted">
+    <li>Select the instrument and timeframe.</li>
+    <li>Choose sample data or paste at least 27 closing prices.</li>
+    <li>Tap Run Technical Analysis.</li>
+    <li>Read the RSI, EMA and MACD results.</li>
+    <li>Save your observations in the Journal.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h2>IMPORTANT LIMITATIONS</h2>
+  <p class="muted">
+    This is an educational technical-indicator calculator.
+    It does not connect to Quotex, fetch live prices, or place trades.
+    Sample data is synthetic and must not be treated as a live signal.
+  </p>
+  <p class="muted">
+    Binary options are exceptionally high risk and may result in losing
+    the entire stake. No indicator guarantees direction or profit.
+  </p>
+</div>
+
+<div class="card">
+  <h2>AI BACKEND</h2>
+  <p class="muted">
+    BigBossAI Chat uses a secure Cloudflare Worker endpoint.
+    API keys must remain on the server and must never be placed in this file.
+    Screenshot AI requires image support in the backend.
+  </p>
+</div>
+
+</section>
+
+</main>
+
+<!-- BIG BOSS AI CHAT -->
+<div id="bigboss-chat">
+
+  <h2>🤖 BigBossAI Chat</h2>
+  <p class="muted">Ask anything or choose Trading AI.</p>
+
+  <label>AI Mode</label>
+  <select id="bigboss-mode">
+    <option value="general">General AI</option>
+    <option value="trading">Trading AI</option>
+  </select>
+
+  <label>Your message</label>
+  <textarea id="bigboss-message" placeholder="Write your question here..."></textarea>
+
+  <button id="bigboss-send">SEND MESSAGE</button>
+
+  <p id="bigboss-status" class="muted"></p>
+  <div id="bigboss-reply"></div>
+
+</div>
+
+<footer>
+  BIG BOSS AI · Version 1.0 · Educational prototype · No automated trading
+</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+
+const API_ENDPOINT =
   "https://bigbossai-backend.rahima783384.workers.dev/";
 
+const sample = [
+  1.0810,1.0814,1.0812,1.0818,1.0820,1.0817,
+  1.0823,1.0825,1.0822,1.0828,1.0830,1.0827,
+  1.0832,1.0835,1.0831,1.0837,1.0839,1.0836,
+  1.0841,1.0844,1.0840,1.0846,1.0848,1.0845,
+  1.0850,1.0852,1.0849,1.0854,1.0857,1.0853,
+  1.0859,1.0861
+];
+
+let current = null;
+let closes = [];
+
+function ema(data, period) {
+  const k = 2 / (period + 1);
+  let value = data[0];
+
+  for (let i = 1; i < data.length; i++) {
+    value = data[i] * k + value * (1 - k);
+  }
+
+  return value;
+}
+
+function rsi(data, period = 14) {
+  let gains = 0;
+  let losses = 0;
+
+  for (let i = data.length - period; i < data.length; i++) {
+    const difference = data[i] - data[i - 1];
+
+    if (difference > 0) gains += difference;
+    else losses -= difference;
+  }
+
+  if (losses === 0) return 100;
+
+  const averageGain = gains / period;
+  const averageLoss = losses / period;
+  const rs = averageGain / averageLoss;
+
+  return 100 - (100 / (1 + rs));
+}
+
+function draw(data) {
+  const canvas = $("chart");
+  const ctx = canvas.getContext("2d");
+
+  const width = canvas.width;
+  const height = canvas.height;
+
+  ctx.clearRect(0, 0, width, height);
+
+  ctx.strokeStyle = "#302a20";
+
+  for (let i = 1; i < 5; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i * height / 5);
+    ctx.lineTo(width, i * height / 5);
+    ctx.stroke();
+  }
+
+  if (!data.length) return;
+
+  const minimum = Math.min(...data);
+  const maximum = Math.max(...data);
+  const range = maximum - minimum || 1;
+
+  ctx.strokeStyle = "#d7ad55";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+
+  data.forEach((value, index) => {
+    const x = index * width / Math.max(data.length - 1, 1);
+    const y = height - 20 -
+      ((value - minimum) / range) * (height - 40);
+
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+}
+
+function analyse() {
+  const raw = $("source").value === "sample"
+    ? sample
+    : $("prices").value
+        .split(/[,;\s]+/)
+        .map(Number)
+        .filter(value => Number.isFinite(value) && value > 0);
+
+  if (raw.length < 27) {
+    alert("Please provide at least 27 valid closing prices, or select sample data.");
+    return;
+  }
+
+  closes = raw;
+
+  const recent = raw.slice(-Math.min(60, raw.length));
+
+  const rv = rsi(raw);
+  const e9 = ema(recent, 9);
+  const e21 = ema(recent, 21);
+  const mac = ema(recent, 12) - ema(recent, 26);
+
+  const bullish =
+    e9 > e21 && mac > 0 && rv > 50 && rv < 70;
+
+  const bearish =
+    e9 < e21 && mac < 0 && rv < 50 && rv > 30;
+
+  const label = bullish
+    ? "BULLISH CONDITIONS"
+    : bearish
+      ? "BEARISH CONDITIONS"
+      : "NO CLEAR SETUP";
+
+  const className = bullish
+    ? "bull"
+    : bearish
+      ? "bear"
+      : "neutral";
+
+  $("signal").textContent = label;
+  $("signal").className = "signal " + className;
+
+  $("status").textContent =
+    $("source").value === "sample"
+      ? "SAMPLE DATA · NOT LIVE"
+      : "USER-ENTERED DATA";
+
+  $("reason").textContent = bullish
+    ? "EMA 9 is above EMA 21, MACD is positive, and RSI is above 50 but below 70."
+    : bearish
+      ? "EMA 9 is below EMA 21, MACD is negative, and RSI is below 50 but above 30."
+      : "The indicators do not align under this simple rule. No directional conclusion.";
+
+  $("rsi").textContent = rv.toFixed(2);
+  $("ema").textContent = e9 > e21 ? "9 above 21" : "9 below 21";
+  $("macd").textContent = mac.toFixed(6);
+
+  $("detail").textContent =
+    "RSI measures momentum; EMA smooths past prices; MACD is the difference between 12- and 26-period EMAs. These indicators can produce false readings. This is not a probability or confidence score.";
+
+  draw(raw);
+
+  current = {
+    asset: $("asset").value,
+    tf: $("tf").value,
+    source: $("source").value,
+    label,
+    rsi: rv,
+    ema: e9 > e21 ? "9 above 21" : "9 below 21",
+    macd: mac,
+    created: new Date().toISOString()
+  };
+}
+
+$("analyse").addEventListener("click", analyse);
+
+$("source").addEventListener("change", () => {
+  if ($("source").value === "sample") {
+    $("prices").value = sample.join(", ");
+  } else {
+    $("prices").value = "";
+  }
+});
+
+$("shot").addEventListener("change", event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+    alert("Please select a PNG, JPG or WEBP image.");
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 8 * 1024 * 1024) {
+    alert("Please use an image smaller than 8 MB.");
+    event.target.value = "";
+    return;
+  }
+
+  const imageURL = URL.createObjectURL(file);
+
+  $("preview").src = imageURL;
+  $("preview").style.display = "block";
+});
+
+$("aiAnalyse").addEventListener("click", () => {
+  if (!$("shot").files.length) {
+    alert("Please select a chart screenshot first.");
+    return;
+  }
+
+  alert(
+    "Screenshot preview is working. AI image analysis is not enabled on the backend yet."
+  );
+});
+
+// Navigation tabs
+document.querySelectorAll(".tab").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.toggle("active", tab === button);
+    });
+
+    ["analyzer", "journal", "guide"].forEach(id => {
+      $(id).classList.toggle("hidden", id !== button.dataset.tab);
+    });
+
+    if (button.dataset.tab === "journal") {
+      render();
+    }
+  });
+});
+
+// Journal
+function getHist() {
+  try {
+    return JSON.parse(localStorage.getItem("bbai-history") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
+}
+
+function render() {
+  const history = getHist();
+
+  $("history").innerHTML = history.length
+    ? history.slice().reverse().map(item => `
+      <div class="historyItem">
+        <b>${escapeHTML(item.label)}</b>
+        <div class="muted">
+          ${escapeHTML(item.asset)} ·
+          ${escapeHTML(item.tf)} ·
+          RSI ${Number(item.rsi).toFixed(1)} ·
+          ${new Date(item.created).toLocaleString()}
+        </div>
+        <div class="muted">${escapeHTML(item.notes || "No notes")}</div>
+      </div>
+    `).join("")
+    : '<p class="muted">No saved analyses yet.</p>';
+}
+
+$("save").addEventListener("click", () => {
+  if (!current) {
+    alert("Run an analysis first.");
+    return;
+  }
+
+  const history = getHist();
+
+  history.push({
+    ...current,
+    notes: $("notes").value
+  });
+
+  try {
+    localStorage.setItem("bbai-history", JSON.stringify(history));
+  } catch {
+    alert("Could not save journal. Browser storage may be full or disabled.");
+    return;
+  }
+
+  $("notes").value = "";
+  render();
+  alert("Saved on this device.");
+});
+
+$("clear").addEventListener("click", () => {
+  if (confirm("Delete all locally saved journal entries?")) {
+    localStorage.removeItem("bbai-history");
+    render();
+  }
+});
+
+$("export").addEventListener("click", () => {
+  const history = getHist();
+
+  const rows = [
+    ["date","asset","timeframe","source","result","rsi","ema","macd","notes"],
+    ...history.map(item => [
+      item.created,
+      item.asset,
+      item.tf,
+      item.source,
+      item.label,
+      item.rsi,
+      item.ema,
+      item.macd,
+      item.notes || ""
+    ])
+  ];
+
+  const csv = rows.map(row =>
+    row.map(value =>
+      '"' + String(value).replace(/"/g, '""') + '"'
+    ).join(",")
+  ).join("\n");
+
+  const blob = new Blob([csv], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "big-boss-ai-journal.csv";
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+// Secure text AI backend
 async function askBigBossAI(message, mode = "general") {
-  const response = await fetch(window.BIGBOSS_AI_API_ENDPOINT, {
+  const response = await fetch(API_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -121,69 +830,15 @@ async function askBigBossAI(message, mode = "general") {
     throw new Error(data.error || "AI connection failed");
   }
 
-  return data.reply;
+  return data.reply || "No reply received from AI.";
 }
 
-$('aiAnalyse').onclick=async()=>{
-  const file=$('shot').files[0];
-  if(!file){alert('Please select a chart screenshot first.');return}
-  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){alert('Please use PNG, JPG or WEBP.');return}
-  if(file.size>8*1024*1024){alert('Please use an image smaller than 8 MB.');return}
-  const btn=$('aiAnalyse'),box=$('aiResult');btn.disabled=true;btn.textContent='ANALYSING…';
-  box.classList.remove('hidden');$('aiDecision').textContent='ANALYSIS IN PROGRESS';
-  $('aiSummary').textContent='Sending screenshot to configured AI backend…';$('aiDetails').textContent='';
-  try{
-    const imageDataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(new Error('Could not read image'));r.readAsDataURL(file)});
-    const response=await fetch(window.BIGBOSS_AI_API_ENDPOINT)
-      
-const response = await fetch(window.BIGBOSS_AI_API_ENDPOINT, {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({
-    imageDataUrl,
-    marketType: $('marketType').value,
-    asset: $('asset').value,
-    timeframe: $('tf').value
-  })
-});
-
-    const payload=await response.json().catch(()=>({error:'Invalid response from backend'}));
-    if(!response.ok)throw new Error(payload.error||`Server error (${response.status})`);
-    const a=payload.analysis||payload,decision=String(a.decision||'NO TRADE').toUpperCase();
-    $('aiDecision').textContent=['CALL','PUT','NO TRADE'].includes(decision)?decision:'NO TRADE';
-    $('aiSummary').textContent=a.summary||'No summary returned.';
-    $('aiDetails').textContent=[a.trend&&'Trend: '+a.trend,a.visible_indicators&&'Indicators: '+a.visible_indicators,a.candle_patterns&&'Candles: '+a.candle_patterns,a.support_resistance&&'Support/resistance: '+a.support_resistance,a.reasons&&'Reason: '+a.reasons,a.limitations&&'Limitations: '+a.limitations].filter(Boolean).join(' · ');
-  }catch(e){$('aiDecision').textContent='ANALYSIS NOT AVAILABLE';$('aiSummary').textContent=e.message||'Backend unavailable';$('aiDetails').textContent='Deploy and configure the secure AI backend before use.'}
-  finally{btn.disabled=false;btn.textContent='ANALYSE SCREENSHOT WITH AI'}
-};
-
-</script></
-<!-- BigBossAI Chat Section -->
-<div id="bigboss-chat" style="max-width:700px;margin:20px auto;padding:20px;background:#111;color:white;border:1px solid #c9a227;border-radius:14px;font-family:Arial;">
-  <h2 style="color:#e5bd45;">🤖 BigBossAI Chat</h2>
-  <p>Ask anything or choose Trading AI.</p>
-
-  <select id="bigboss-mode" style="width:100%;padding:12px;margin-bottom:10px;">
-    <option value="general">General AI</option>
-    <option value="trading">Trading AI</option>
-  </select>
-
-  <textarea id="bigboss-message" placeholder="Write your question here..." style="width:100%;min-height:100px;padding:12px;box-sizing:border-box;"></textarea>
-
-  <button id="bigboss-send" style="margin-top:10px;padding:12px 22px;background:#d4af37;color:#111;border:0;border-radius:8px;font-weight:bold;">
-    Send Message
-  </button>
-
-  <div id="bigboss-status" style="margin-top:15px;color:#e5bd45;"></div>
-  <div id="bigboss-reply" style="margin-top:12px;white-space:pre-wrap;line-height:1.6;"></div>
-</div>
-
-<script>
-document.getElementById("bigboss-send").addEventListener("click", async function () {
-  const message = document.getElementById("bigboss-message").value.trim();
-  const mode = document.getElementById("bigboss-mode").value;
-  const status = document.getElementById("bigboss-status");
-  const reply = document.getElementById("bigboss-reply");
+// Chat
+$("bigboss-send").addEventListener("click", async function () {
+  const message = $("bigboss-message").value.trim();
+  const mode = $("bigboss-mode").value;
+  const status = $("bigboss-status");
+  const reply = $("bigboss-reply");
 
   if (!message) {
     status.textContent = "Please enter your question.";
@@ -196,6 +851,7 @@ document.getElementById("bigboss-send").addEventListener("click", async function
 
   try {
     const answer = await askBigBossAI(message, mode);
+
     reply.textContent = answer;
     status.textContent = "Response received.";
   } catch (error) {
@@ -204,6 +860,10 @@ document.getElementById("bigboss-send").addEventListener("click", async function
     this.disabled = false;
   }
 });
+
+// Initial chart
+draw([]);
 </script>
-  ></html> 
-                          
+
+</body>
+</html>
