@@ -134,7 +134,7 @@ $('aiAnalyse').onclick=async()=>{
   $('aiSummary').textContent='Sending screenshot to configured AI backend…';$('aiDetails').textContent='';
   try{
     const imageDataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(new Error('Could not read image'));r.readAsDataURL(file)});
-    const response=await fetch(window.BIGBOSS_AI_API_ENDPOINT || 'https://YOUR-WORKER-NAME.workers.dev/api/analyze',{
+    const response=await fetch(window.BIGBOSS_AI_API_ENDPOINT)
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({imageDataUrl,marketType:$('marketType').value,asset:$('asset').value,timeframe:$('tf').value})
     });
