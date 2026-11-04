@@ -1,403 +1,317 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090909">
-<title>BIG BOSS AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIG BOSS AI - Forex</title>
 <style>
-:root{color-scheme:dark;--bg:#090909;--panel:#151515;--gold:#e5bd68;--muted:#aaa39a;--green:#55c99b;--red:#f07b78}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#f7f2e8;font:15px system-ui}
-header{padding:20px;background:#111;border-bottom:1px solid #554327}
-h1{margin:0;color:var(--gold);letter-spacing:2px}
-header p,.muted{color:var(--muted);font-size:12px;line-height:1.6}
-main{max-width:850px;margin:auto;padding:14px}
-.card{background:var(--panel);border:1px solid #493a25;border-radius:15px;padding:16px;margin-bottom:14px}
-h2{font-size:16px;color:var(--gold);margin-top:0}
-label{display:block;color:var(--muted);font-size:12px;margin:12px 0 5px}
-select,input,textarea{width:100%;padding:12px;border-radius:9px;background:#080808;color:white;border:1px solid #554327;font:inherit}
-button{width:100%;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#17110a;font-weight:bold;margin-top:12px}
+body{margin:0;background:#0b1020;color:#eef2ff;font-family:Arial,sans-serif}
+header{padding:20px;background:#151e35;border-bottom:1px solid #293653}
+h1{margin:0;color:#55d6a5;font-size:25px}
+header p{color:#9eacc7;margin:7px 0 0}
+main{max-width:850px;margin:auto;padding:16px}
+.card{background:#151e35;border:1px solid #293653;border-radius:13px;padding:16px;margin-bottom:15px}
+h2{font-size:18px;margin-top:0;color:#55d6a5}
+label{display:block;margin:12px 0 6px;color:#b8c5dd}
+select,input,textarea{width:100%;padding:12px;background:#0b1020;color:white;border:1px solid #394966;border-radius:8px;font-size:15px}
+button{background:#16a879;color:white;border:0;padding:12px 16px;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px}
 button:disabled{opacity:.5}
-.secondary{background:#282116;color:var(--gold)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.metric{background:#090909;padding:12px;border:1px solid #493a25;border-radius:10px}
-.metric span{display:block;color:var(--muted);font-size:11px}
-.metric b{display:block;margin-top:5px;font-size:18px}
-.signal{font-size:24px;font-weight:bold;margin:12px 0}
-.bull{color:var(--green)}.bear{color:var(--red)}.neutral{color:var(--gold)}
-#reply{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
-.hidden{display:none}
-footer{text-align:center;color:#777;padding:20px;font-size:11px}
-@media(max-width:450px){.grid{grid-template-columns:1fr 1fr}}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#0b1020;padding:13px;border-radius:9px}
+.stat small{color:#9eacc7}
+.stat strong{display:block;font-size:19px;margin-top:7px}
+.green{color:#55d6a5}
+.red{color:#ff7777}
+.muted{color:#9eacc7;font-size:13px;line-height:1.5}
+#status{margin-top:12px;color:#f4c96b}
+#chatOutput{white-space:pre-wrap;line-height:1.5;margin-top:12px}
+ul{padding-left:20px}
+li{margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:9px;border-bottom:1px solid #293653;text-align:left}
+footer{text-align:center;color:#75839e;padding:20px;font-size:12px}
 </style>
 </head>
 <body>
 <header>
-<h1>♛ BIG BOSS AI</h1>
-<p>TRADING ANALYSIS • EDUCATIONAL TOOL</p>
+<h1>BIG BOSS AI</h1>
+<p>Forex Market Analysis Dashboard</p>
 </header>
 
 <main>
-<div class="card">
-<h2>01 / MARKET SETUP</h2>
-
-<label>Market</label>
-<select id="market">
-<option value="quotex">Quotex OTC</option>
+<section class="card">
+<h2>Forex Market</h2>
+<label>Select Currency Pair</label>
+<select id="pair">
+<option value="EUR|USD">EUR/USD</option>
+<option value="GBP|USD">GBP/USD</option>
+<option value="USD|JPY">USD/JPY</option>
+<option value="USD|CHF">USD/CHF</option>
+<option value="AUD|USD">AUD/USD</option>
+<option value="USD|CAD">USD/CAD</option>
+<option value="NZD|USD">NZD/USD</option>
+<option value="EUR|GBP">EUR/GBP</option>
 </select>
+<p class="muted">Timeframe: Daily (1D) · Free historical reference data</p>
+<button id="loadBtn" onclick="loadMarket()">Analyze Forex</button>
+<div id="status">Select a pair and tap Analyze Forex.</div>
+</section>
 
-<label>Instrument</label>
-<select id="asset">
-<option value="">Loading instruments...</option>
-</select>
-
-<label>Timeframe</label>
-<select id="tf">
-<option value="60">1 Minute</option>
-<option value="300">5 Minutes</option>
-<option value="900">15 Minutes</option>
-<option value="3600">1 Hour</option>
-<option value="14400">4 Hours</option>
-<option value="86400">1 Day</option>
-</select>
-
-<button id="load">LOAD MARKET DATA & ANALYSE</button>
-<p class="muted" id="marketStatus">Connecting to BigBossAI backend...</p>
-</div>
-
-<div class="card">
-<h2>02 / ANALYSIS RESULT</h2>
-<div id="signal" class="signal neutral">WAITING FOR DATA</div>
-<p id="reason" class="muted">Select an instrument and load market data.</p>
-
+<section class="card">
+<h2>Market Indicators</h2>
 <div class="grid">
-<div class="metric"><span>RSI (14)</span><b id="rsi">—</b></div>
-<div class="metric"><span>EMA (9 / 21)</span><b id="ema">—</b></div>
-<div class="metric"><span>MACD (12 / 26)</span><b id="macd">—</b></div>
-<div class="metric"><span>Latest Close</span><b id="price">—</b></div>
+<div class="stat"><small>Latest Rate</small><strong id="price">--</strong></div>
+<div class="stat"><small>RSI (14)</small><strong id="rsi">--</strong></div>
+<div class="stat"><small>EMA (9)</small><strong id="ema9">--</strong></div>
+<div class="stat"><small>EMA (21)</small><strong id="ema21">--</strong></div>
+<div class="stat"><small>MACD</small><strong id="macd">--</strong></div>
+<div class="stat"><small>Market Signal</small><strong id="signal">--</strong></div>
 </div>
-<p class="muted" id="dataTime"></p>
-<p class="muted" id="sourceNote">Source: OTCharts independent Quotex feed. Not an official Quotex API.</p>
-</div>
+<p class="muted" id="updated"></p>
+</section>
 
-<div class="card">
-<h2>03 / BIG BOSS AI CHAT</h2>
-<label>AI Mode</label>
-<select id="mode">
-<option value="general">General AI</option>
-<option value="trading">Trading AI</option>
+<section class="card">
+<h2>AI Forex Assistant</h2>
+<p class="muted">Ask questions about Forex, technical analysis, risk management or trading education.</p>
+<textarea id="question" rows="3" placeholder="Ask your Forex question..."></textarea>
+<button onclick="askAI()" id="askBtn">Ask AI</button>
+<div id="chatOutput"></div>
+</section>
+
+<section class="card">
+<h2>Trading Journal</h2>
+<label>Currency Pair</label>
+<input id="journalPair" placeholder="Example: EUR/USD">
+<label>Trade Result</label>
+<select id="result">
+<option value="Win">Win</option>
+<option value="Loss">Loss</option>
+<option value="Break-even">Break-even</option>
 </select>
-<label>Your message</label>
-<textarea id="message" rows="4" placeholder="Ask BigBossAI..."></textarea>
-<button id="send">SEND MESSAGE</button>
-<p id="chatStatus" class="muted"></p>
-<div id="reply"></div>
-</div>
+<label>Notes</label>
+<input id="notes" placeholder="Enter your trade notes">
+<button onclick="saveTrade()">Save Trade</button>
+<button onclick="exportCSV()">Export CSV</button>
+<div id="journal"></div>
+</section>
 
-<div class="card">
-<h2>04 / JOURNAL</h2>
-<label>Analysis notes</label>
-<input id="notes" placeholder="Write your notes">
-<button id="save" class="secondary">SAVE CURRENT ANALYSIS</button>
-<button id="export" class="secondary">EXPORT JOURNAL CSV</button>
-<div id="history"></div>
-</div>
-
-<div class="card">
-<h2>IMPORTANT RISK NOTICE</h2>
+<section class="card">
+<h2>Important Data Notice</h2>
 <p class="muted">
-This app provides educational technical analysis only.
-It does not guarantee market direction or profit and does not place trades.
-Quotex OTC prices are separate from real-market Forex prices.
-Free API access may have request and instrument limits.
+This app uses the free Frankfurter API with European Central Bank reference rates.
+Data is daily, not live Forex broker pricing. Weekends and holidays may have no new rate.
+Indicators are calculated from historical daily exchange rates.
+This app provides educational analysis only, not guaranteed trading signals.
+Always manage risk and verify prices with your broker.
 </p>
-</div>
+</section>
 </main>
 
-<footer>BIG BOSS AI · Educational prototype · No automated trading</footer>
+<footer>BIG BOSS AI · Forex Edition</footer>
 
 <script>
-"use strict";
+const WORKER_URL="https://bigbossai-backend.rahima783384.workers.dev/";
 
-const API = "https://bigbossai-backend.rahima783384.workers.dev";
-const $ = id => document.getElementById(id);
+let marketData=[];
 
-let currentAnalysis = null;
-let instruments = [];
-
-async function apiGet(path) {
-  const response = await fetch(API + path);
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Backend request failed");
-  return data;
+function average(values){
+return values.reduce((a,b)=>a+b,0)/values.length;
 }
 
-async function loadSymbols() {
-  const status = $("marketStatus");
-  status.textContent = "Loading Quotex OTC instruments...";
-
-  try {
-    const data = await apiGet("/api/quotex/symbols");
-    instruments = data.symbols || [];
-
-    const select = $("asset");
-    select.innerHTML = "";
-
-    const available = instruments.filter(item => item.open !== false);
-
-    available.forEach(item => {
-      const option = document.createElement("option");
-      option.value = item.symbol;
-      option.textContent = item.name || item.symbol;
-      select.appendChild(option);
-    });
-
-    if (!available.length) {
-      status.textContent = "No open instruments returned. Check API access.";
-      select.innerHTML = '<option value="">No instruments available</option>';
-      return;
-    }
-
-    status.textContent =
-      available.length + " instruments loaded. Choose one to analyse.";
-  } catch (error) {
-    status.textContent = "Connection error: " + error.message;
-    $("asset").innerHTML = '<option value="">Could not load instruments</option>';
-  }
+function ema(values,period){
+let multiplier=2/(period+1);
+let result=values[0];
+for(let i=1;i<values.length;i++){
+result=values[i]*multiplier+result*(1-multiplier);
+}
+return result;
 }
 
-function calculateEMA(values, period) {
-  const k = 2 / (period + 1);
-  let result = values[0];
-
-  for (let i = 1; i < values.length; i++) {
-    result = values[i] * k + result * (1 - k);
-  }
-  return result;
+function rsi(values,period=14){
+let gains=0,losses=0;
+for(let i=values.length-period;i<values.length;i++){
+let change=values[i]-values[i-1];
+if(change>0) gains+=change;
+else losses-=change;
+}
+if(losses===0)return 100;
+let rs=(gains/period)/(losses/period);
+return 100-(100/(1+rs));
 }
 
-function calculateRSI(values, period = 14) {
-  let gain = 0;
-  let loss = 0;
-
-  for (let i = values.length - period; i < values.length; i++) {
-    const change = values[i] - values[i - 1];
-    if (change > 0) gain += change;
-    else loss -= change;
-  }
-
-  if (loss === 0) return 100;
-
-  const rs = (gain / period) / (loss / period);
-  return 100 - (100 / (1 + rs));
+function macd(values){
+let fast=ema(values.slice(-26),12);
+let slow=ema(values.slice(-26),26);
+return fast-slow;
 }
 
-async function analyseMarket() {
-  const symbol = $("asset").value;
-  const tf = $("tf").value;
-  const button = $("load");
+async function loadMarket(){
+const btn=document.getElementById("loadBtn");
+const status=document.getElementById("status");
+btn.disabled=true;
+status.textContent="Loading daily Forex data...";
 
-  if (!symbol) {
-    $("marketStatus").textContent = "Please select an instrument.";
-    return;
-  }
+try{
+const [base,quote]=document.getElementById("pair").value.split("|");
+const end=new Date();
+const start=new Date();
+start.setDate(start.getDate()-180);
 
-  button.disabled = true;
-  button.textContent = "LOADING DATA...";
-  $("marketStatus").textContent = "Requesting market candles...";
+const format=d=>d.toISOString().slice(0,10);
+const url=`https://api.frankfurter.dev/v1/${format(start)}..${format(end)}?base=${base}&symbols=${quote}`;
 
-  try {
-    const path = "/api/quotex/candles?symbol=" +
-      encodeURIComponent(symbol) + "&tf=" + encodeURIComponent(tf);
+const response=await fetch(url);
+if(!response.ok)throw new Error("Forex data service unavailable.");
 
-    const data = await apiGet(path);
-    const candles = data.candles || [];
+const data=await response.json();
+marketData=Object.entries(data.rates)
+.sort((a,b)=>a[0].localeCompare(b[0]))
+.map(([date,rate])=>({date,value:rate[quote]}));
 
-    if (candles.length < 27) {
-      throw new Error("Not enough candles returned for analysis.");
-    }
-
-    const closes = candles
-      .map(c => Number(c.close))
-      .filter(v => Number.isFinite(v) && v > 0);
-
-    if (closes.length < 27) {
-      throw new Error("Not enough valid closing prices.");
-    }
-
-    const recent = closes.slice(-60);
-    const rsi = calculateRSI(recent);
-    const ema9 = calculateEMA(recent, 9);
-    const ema21 = calculateEMA(recent, 21);
-    const macd = calculateEMA(recent, 12) -
-                 calculateEMA(recent, 26);
-
-    const bullish = ema9 > ema21 && macd > 0 && rsi > 50 && rsi < 70;
-    const bearish = ema9 < ema21 && macd < 0 && rsi < 50 && rsi > 30;
-
-    let label = "NO CLEAR SETUP";
-    let css = "neutral";
-    let reason = "Indicators are not aligned. Wait for a clearer setup.";
-
-    if (bullish) {
-      label = "BULLISH CONDITIONS";
-      css = "bull";
-      reason = "EMA 9 is above EMA 21, MACD is positive, and RSI is between 50 and 70.";
-    } else if (bearish) {
-      label = "BEARISH CONDITIONS";
-      css = "bear";
-      reason = "EMA 9 is below EMA 21, MACD is negative, and RSI is below 50.";
-    }
-
-    $("signal").textContent = label;
-    $("signal").className = "signal " + css;
-    $("reason").textContent = reason;
-    $("rsi").textContent = rsi.toFixed(2);
-    $("ema").textContent = ema9 > ema21 ? "9 above 21" : "9 below 21";
-    $("macd").textContent = macd.toFixed(6);
-    $("price").textContent = closes[closes.length - 1];
-
-    const lastCandle = candles[candles.length - 1];
-    const candleDate = new Date(Number(lastCandle.time) * 1000);
-
-    $("dataTime").textContent =
-      "Latest candle time: " +
-      candleDate.toLocaleString("en-IN", {timeZone:"Asia/Kolkata"}) +
-      " (India time). App checked: " +
-      new Date().toLocaleTimeString("en-IN", {timeZone:"Asia/Kolkata"});
-
-    $("marketStatus").textContent =
-      candles.length + " candles received. Analysis complete.";
-
-    currentAnalysis = {
-      date: new Date().toISOString(),
-      symbol,
-      timeframe: tf,
-      result: label,
-      rsi: rsi.toFixed(2),
-      ema: ema9 > ema21 ? "9 above 21" : "9 below 21",
-      macd: macd.toFixed(6),
-      price: closes[closes.length - 1]
-    };
-
-  } catch (error) {
-    $("marketStatus").textContent = "Analysis error: " + error.message;
-  } finally {
-    button.disabled = false;
-    button.textContent = "LOAD MARKET DATA & ANALYSE";
-  }
+if(marketData.length<27){
+throw new Error("Not enough historical data. Try again later.");
 }
 
-$("load").addEventListener("click", analyseMarket);
+const values=marketData.map(x=>x.value);
+const latest=values[values.length-1];
+const r=rsi(values);
+const e9=ema(values.slice(-9),9);
+const e21=ema(values.slice(-21),21);
+const m=macd(values);
 
-$("send").addEventListener("click", async () => {
-  const message = $("message").value.trim();
-  if (!message) {
-    $("chatStatus").textContent = "Please enter a message.";
-    return;
-  }
+document.getElementById("price").textContent=latest.toFixed(5);
+document.getElementById("rsi").textContent=r.toFixed(2);
+document.getElementById("ema9").textContent=e9.toFixed(5);
+document.getElementById("ema21").textContent=e21.toFixed(5);
+document.getElementById("macd").textContent=m.toFixed(5);
 
-  const button = $("send");
-  button.disabled = true;
-  $("chatStatus").textContent = "BigBossAI is thinking...";
-  $("reply").textContent = "";
+let signal="NEUTRAL";
+if(e9>e21 && r>50 && m>0)signal="BULLISH";
+else if(e9<e21 && r<50 && m<0)signal="BEARISH";
 
-  try {
-    const response = await fetch(API + "/", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        message,
-        mode: $("mode").value
-      })
-    });
+const signalEl=document.getElementById("signal");
+signalEl.textContent=signal;
+signalEl.className=signal==="BULLISH"?"green":signal==="BEARISH"?"red":"";
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Chat request failed");
+document.getElementById("updated").textContent=
+"Latest available rate date: "+marketData[marketData.length-1].date;
 
-    $("reply").textContent = data.reply || "No reply received.";
-    $("chatStatus").textContent = "Response received.";
-  } catch (error) {
-    $("chatStatus").textContent = "Chat error: " + error.message;
-  } finally {
-    button.disabled = false;
-  }
+status.textContent="Analysis completed successfully.";
+document.getElementById("journalPair").value=base+"/"+quote;
+
+}catch(error){
+status.textContent="Error: "+error.message;
+}finally{
+btn.disabled=false;
+}
+}
+
+async function askAI(){
+const question=document.getElementById("question").value.trim();
+const output=document.getElementById("chatOutput");
+const btn=document.getElementById("askBtn");
+
+if(!question){
+output.textContent="Please enter your question.";
+return;
+}
+
+btn.disabled=true;
+output.textContent="AI is thinking...";
+
+try{
+const response=await fetch(WORKER_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+message:question,
+mode:"forex"
+})
 });
 
-function getJournal() {
-  try {
-    return JSON.parse(localStorage.getItem("bbai-history") || "[]");
-  } catch {
-    return [];
-  }
+if(!response.ok)throw new Error("AI service error: "+response.status);
+
+const data=await response.json();
+output.textContent=data.reply||data.response||data.message||JSON.stringify(data);
+}catch(error){
+output.textContent="Could not connect to AI service. "+error.message;
+}finally{
+btn.disabled=false;
+}
 }
 
-function showJournal() {
-  const items = getJournal();
-  $("history").innerHTML = "";
-
-  items.slice().reverse().forEach(item => {
-    const div = document.createElement("div");
-    div.className = "card";
-    const heading = document.createElement("b");
-    heading.textContent = item.result + " — " + item.symbol;
-    const details = document.createElement("p");
-    details.className = "muted";
-    details.textContent =
-      "RSI " + item.rsi + " · " + item.timeframe +
-      " seconds · " + new Date(item.date).toLocaleString();
-    const note = document.createElement("p");
-    note.className = "muted";
-    note.textContent = item.notes || "";
-    div.append(heading, details, note);
-    $("history").appendChild(div);
-  });
+function getTrades(){
+return JSON.parse(localStorage.getItem("bigboss_forex_journal")||"[]");
 }
 
-$("save").addEventListener("click", () => {
-  if (!currentAnalysis) {
-    alert("Please run an analysis first.");
-    return;
-  }
+function saveTrade(){
+const pair=document.getElementById("journalPair").value.trim();
+const result=document.getElementById("result").value;
+const notes=document.getElementById("notes").value.trim();
 
-  const items = getJournal();
-  items.push({
-    ...currentAnalysis,
-    notes: $("notes").value
-  });
+if(!pair){
+alert("Enter a currency pair first.");
+return;
+}
 
-  localStorage.setItem("bbai-history", JSON.stringify(items));
-  $("notes").value = "";
-  showJournal();
-  alert("Analysis saved on this device.");
+const trades=getTrades();
+trades.push({
+date:new Date().toLocaleString(),
+pair,result,notes
 });
 
-$("export").addEventListener("click", () => {
-  const items = getJournal();
-  if (!items.length) {
-    alert("Journal is empty.");
-    return;
-  }
+localStorage.setItem("bigboss_forex_journal",JSON.stringify(trades));
+document.getElementById("notes").value="";
+showJournal();
+}
 
-  const columns = ["date","symbol","timeframe","result","rsi","ema","macd","price","notes"];
-  const rows = [columns, ...items.map(item => columns.map(k => item[k] ?? ""))];
-  const csv = rows.map(row => row.map(v =>
-    '"' + String(v).replace(/"/g, '""') + '"'
-  ).join(",")).join("\n");
+function showJournal(){
+const trades=getTrades();
+const container=document.getElementById("journal");
 
-  const blob = new Blob([csv], {type:"text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "BigBossAI-Journal.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-});
+if(!trades.length){
+container.innerHTML='<p class="muted">No trades saved yet.</p>';
+return;
+}
+
+container.innerHTML="<table><tr><th>Date</th><th>Pair</th><th>Result</th></tr>"+
+trades.slice().reverse().map(t=>
+`<tr><td>${escapeHTML(t.date)}</td><td>${escapeHTML(t.pair)}</td><td>${escapeHTML(t.result)}</td></tr>`
+).join("")+"</table>";
+}
+
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+}
+
+function exportCSV(){
+const trades=getTrades();
+if(!trades.length){
+alert("No trades to export.");
+return;
+}
+
+const rows=[
+["Date","Pair","Result","Notes"],
+...trades.map(t=>[t.date,t.pair,t.result,t.notes])
+];
+
+const csv=rows.map(row=>row.map(v=>
+'"'+String(v).replace(/"/g,'""')+'"'
+).join(",")).join("\n");
+
+const blob=new Blob([csv],{type:"text/csv"});
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download="BigBossAI-Forex-Journal.csv";
+link.click();
+URL.revokeObjectURL(link.href);
+}
 
 showJournal();
-loadSymbols();
 </script>
 </body>
 </html>
